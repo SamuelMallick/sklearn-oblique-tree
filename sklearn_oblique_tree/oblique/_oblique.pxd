@@ -7,19 +7,18 @@ cdef extern from "stdio.h":
 
 cdef extern from "../../oc1_source/mktree.c":
 
-    struct tree_node:
-          # double *coefficients
-          # int *left_count
-          # int *right_count
-          # tree_node *parent
-          # tree_node *left
-          # tree_node *right
-          # int left_cat
-          # int right_cat
-          # #char label[MAX_DT_DEPTH]
-          # double alpha #used only in error_complexity pruning.
-          # int no_of_points
-        pass
+    cdef struct tree_node:  # WAS important that this was cdef and not ctypedef
+        double *coefficients
+        int *left_count
+        int *right_count
+        tree_node *parent
+        tree_node *left
+        tree_node *right
+        int left_cat
+        int right_cat
+        # char label[MAX_DT_DEPTH]
+        double alpha #used only in error_complexity pruning.
+        int no_of_points
 
     struct test_outcome:
         pass
@@ -50,9 +49,9 @@ cdef extern from "../../oc1_source/mktree.c":
 
     tree_node* build_tree(POINT** points, int no_of_points, char * dt_file)
 
-
-
 cdef class Tree:
     cpdef str splitter
     cpdef fit(self, numpy.ndarray[numpy.float_t, ndim=2, mode="c"] X, numpy.ndarray[numpy.int_t, mode="c"] y, long int random_state, str splitter,  int number_of_restarts, int max_perturbations)
     cpdef predict(self, numpy.ndarray y)
+    cpdef get_partition(self)
+    cdef recurse(self, tree_node* node, numpy.ndarray A, list regions)

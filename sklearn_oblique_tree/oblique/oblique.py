@@ -39,4 +39,7 @@ class ObliqueTree(BaseEstimator, ClassifierMixin):
 
     def predict(self, X):
         return self.tree.predict(X)
+    
+    def get_partition(self):
+        return self.tree.get_partition()
 

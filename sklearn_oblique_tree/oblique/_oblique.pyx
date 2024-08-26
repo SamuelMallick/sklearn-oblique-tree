@@ -1,9 +1,9 @@
-from _oblique cimport build_tree, srand48 #Struct for an oblique tree node with references to children
+from _oblique cimport build_tree, srand48, tree_node #Struct for an oblique tree node with references to children
 from libc.stdio cimport printf
 import numpy as np
 cimport numpy as np
 from libc.stdlib cimport malloc, free
-
+from cython.operator import dereference
 
 cdef class Tree:
 
@@ -99,8 +99,35 @@ cdef class Tree:
 
         return predictions
 
+    cpdef get_partition(self):
+        global sklearn_root_node
+        regions = []
+        A = np.empty((0, no_of_dimensions+1))
+        return self.recurse(sklearn_root_node, A.copy(), regions)
 
+    cdef recurse(self, tree_node* node, np.ndarray A, list regions):
+        print('recurse call')
 
+        if node.left is NULL and node.right is NULL:    # leaf node
+            regions.append(A)
+            print('leaf!')
+        else:
+            if node.left is not NULL:
+                # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
+                x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+                new_row = np.array(x)
+                A_ = np.vstack((A.copy(), new_row))
+                print('going left')
+                regions = self.recurse(node.left, A_, regions)
+
+            if node.right is not NULL:
+                x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
+                new_row = np.array(x)
+                A_ = np.vstack((A.copy(), new_row))
+                print('going right')
+                regions = self.recurse(node.right, A_, regions)
+    
+        return regions
 
 
 
