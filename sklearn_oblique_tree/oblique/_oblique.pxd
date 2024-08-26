@@ -50,8 +50,8 @@ cdef extern from "../../oc1_source/mktree.c":
     tree_node* build_tree(POINT** points, int no_of_points, char * dt_file)
 
 cdef class Tree:
-    cpdef str splitter
-    cpdef fit(self, numpy.ndarray[numpy.float_t, ndim=2, mode="c"] X, numpy.ndarray[numpy.int_t, mode="c"] y, long int random_state, str splitter,  int number_of_restarts, int max_perturbations)
-    cpdef predict(self, numpy.ndarray y)
+    cdef str splitter
+    cpdef fit(self, numpy.ndarray[numpy.float_t, ndim=2, mode="c"] X, y, long int random_state, str splitter,  int number_of_restarts, int max_perturbations)
+    cpdef predict(self, numpy.ndarray[numpy.float_t, ndim=2, mode="c"] y)
     cpdef get_partition(self)
     cdef recurse(self, tree_node* node, numpy.ndarray A, list regions)

@@ -1,4 +1,4 @@
-from _oblique cimport build_tree, srand48, tree_node #Struct for an oblique tree node with references to children
+# from _oblique cimport build_tree, srand48, tree_node #Struct for an oblique tree node with references to children
 from libc.stdio cimport printf
 import numpy as np
 cimport numpy as np
@@ -13,7 +13,7 @@ cdef class Tree:
         global no_of_train_points
         deallocate_structures(no_of_train_points)
 
-    cpdef fit(self, np.ndarray[np.float_t, ndim=2, mode="c"] X, numpy.ndarray[np.int_t, mode="c"] y, long int random_state, str splitter, int number_of_restarts, int max_perturbations):
+    cpdef fit(self, np.ndarray[np.float_t, ndim=2, mode="c"] X, y, long int random_state, str splitter, int number_of_restarts, int max_perturbations):
         """
         Grows an Oblique Decision Tree by calling sub-routines from Murphys implementation of OC1 and Cart-Linear
         :param X:
@@ -63,8 +63,10 @@ cdef class Tree:
         for i in range(1,num_points+1):
             points[i] = <POINT * > malloc( sizeof(POINT *))
 
+        cdef double* ptr
         for i in range(1,num_points+1):
-            points[i].dimension = (&X[i-1,0] - 1)
+            ptr = (&X[i-1, 0]-1)
+            points[i].dimension = ptr
             points[i].category = y[i-1] + 1
             points[i].val = 0
 
@@ -86,8 +88,10 @@ cdef class Tree:
         for i in range(1,num_predict_points+1):
             points_predict[i] = <POINT * > malloc( sizeof(POINT *))
 
+        cdef double* ptr
         for i in range(1,num_predict_points+1):
-            points_predict[i].dimension = (&X[i-1,0] - 1)
+            ptr = &X[i-1, 0]-1
+            points_predict[i].dimension = ptr
             points_predict[i].category = -1
             points_predict[i].val = 0
 
