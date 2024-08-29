@@ -114,7 +114,7 @@ cdef class Tree:
 
         # left
         # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
-        x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+        x = [node.coefficients[i] for i in range(1, no_of_dimensions+1)] + [-node.coefficients[no_of_dimensions+1]] # negative sign because we use < 0 as convention
         new_row = np.array(x)
         A_ = np.vstack((A.copy(), new_row))
         if node.left is not NULL:            
@@ -125,7 +125,7 @@ cdef class Tree:
             regions.append(A_)
 
         # right
-        x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
+        x = [-node.coefficients[i] for i in range(1, no_of_dimensions+1)] + [node.coefficients[no_of_dimensions+1]]
         new_row = np.array(x)
         A_ = np.vstack((A.copy(), new_row))
         if node.right is not NULL:
