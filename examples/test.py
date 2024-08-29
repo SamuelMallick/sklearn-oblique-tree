@@ -31,8 +31,8 @@ ax.plot(X_train[y_train.squeeze() == 0][:, 0], X_train[y_train.squeeze() == 0][:
 ax.plot(X_train[y_train.squeeze() == 1][:, 0], X_train[y_train.squeeze() == 1][:, 1], "g.", markersize=1)
 
 # X_train, X_test, y_train, y_test = train_test_split(*load_iris(return_X_y=True), test_size=.4, random_state=random_state)
-print(X_train.shape)
-print(y_train)
+# print(X_train.shape)
+# print(y_train)
 tree.fit(X_train, y_train)
 
 # predictions = tree.predict(X_test)

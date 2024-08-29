@@ -112,24 +112,28 @@ cdef class Tree:
     cdef recurse(self, tree_node* node, np.ndarray A, list regions):
         print('recurse call')
 
-        if node.left is NULL and node.right is NULL:    # leaf node
-            regions.append(A)
-            print('leaf!')
+        # left
+        # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
+        x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+        new_row = np.array(x)
+        A_ = np.vstack((A.copy(), new_row))
+        if node.left is not NULL:            
+            print('going left')
+            regions = self.recurse(node.left, A_.copy(), regions)
         else:
-            if node.left is not NULL:
-                # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
-                x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
-                new_row = np.array(x)
-                A_ = np.vstack((A.copy(), new_row))
-                print('going left')
-                regions = self.recurse(node.left, A_, regions)
+            print('leaf')
+            regions.append(A_)
 
-            if node.right is not NULL:
-                x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
-                new_row = np.array(x)
-                A_ = np.vstack((A.copy(), new_row))
-                print('going right')
-                regions = self.recurse(node.right, A_, regions)
+        # right
+        x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
+        new_row = np.array(x)
+        A_ = np.vstack((A.copy(), new_row))
+        if node.right is not NULL:
+            print('going right')
+            regions = self.recurse(node.right, A_.copy(), regions)
+        else:
+            print('leaf')
+            regions.append(A_)
     
         return regions
 

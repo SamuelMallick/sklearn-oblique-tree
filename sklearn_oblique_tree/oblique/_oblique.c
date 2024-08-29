@@ -2250,27 +2250,6 @@ static CYTHON_INLINE int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 /* KeywordStringCheck.proto */
 static int __Pyx_CheckKeywordStrings(PyObject *kw, const char* function_name, int kw_allowed);
 
-/* ListAppend.proto */
-#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
-static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
-    PyListObject* L = (PyListObject*) list;
-    Py_ssize_t len = Py_SIZE(list);
-    if (likely(L->allocated > len) & likely(len > (L->allocated >> 1))) {
-        Py_INCREF(x);
-        #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030d0000
-        L->ob_item[len] = x;
-        #else
-        PyList_SET_ITEM(list, len, x);
-        #endif
-        __Pyx_SET_SIZE(list, len + 1);
-        return 0;
-    }
-    return PyList_Append(list, x);
-}
-#else
-#define __Pyx_PyList_Append(L,x) PyList_Append(L,x)
-#endif
-
 /* ListCompAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
 static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
@@ -2294,6 +2273,27 @@ static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
 
 /* RaiseUnexpectedTypeError.proto */
 static int __Pyx_RaiseUnexpectedTypeError(const char *expected, PyObject *obj);
+
+/* ListAppend.proto */
+#if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
+static CYTHON_INLINE int __Pyx_PyList_Append(PyObject* list, PyObject* x) {
+    PyListObject* L = (PyListObject*) list;
+    Py_ssize_t len = Py_SIZE(list);
+    if (likely(L->allocated > len) & likely(len > (L->allocated >> 1))) {
+        Py_INCREF(x);
+        #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030d0000
+        L->ob_item[len] = x;
+        #else
+        PyList_SET_ITEM(list, len, x);
+        #endif
+        __Pyx_SET_SIZE(list, len + 1);
+        return 0;
+    }
+    return PyList_Append(list, x);
+}
+#else
+#define __Pyx_PyList_Append(L,x) PyList_Append(L,x)
+#endif
 
 /* IncludeStructmemberH.proto */
 #include <structmember.h>
@@ -2834,7 +2834,7 @@ static const char __pyx_k_oc1[] = "oc1";
 static const char __pyx_k_Tree[] = "Tree";
 static const char __pyx_k_cart[] = "cart";
 static const char __pyx_k_copy[] = "copy";
-static const char __pyx_k_leaf[] = "leaf!";
+static const char __pyx_k_leaf[] = "leaf";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_self[] = "self";
@@ -2996,7 +2996,7 @@ typedef struct {
   PyObject *__pyx_n_s_int32;
   PyObject *__pyx_n_s_is_coroutine;
   PyObject *__pyx_kp_u_isenabled;
-  PyObject *__pyx_kp_s_leaf;
+  PyObject *__pyx_n_s_leaf;
   PyObject *__pyx_n_s_main;
   PyObject *__pyx_n_s_max_perturbations;
   PyObject *__pyx_n_s_name;
@@ -3138,7 +3138,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_int32);
   Py_CLEAR(clear_module_state->__pyx_n_s_is_coroutine);
   Py_CLEAR(clear_module_state->__pyx_kp_u_isenabled);
-  Py_CLEAR(clear_module_state->__pyx_kp_s_leaf);
+  Py_CLEAR(clear_module_state->__pyx_n_s_leaf);
   Py_CLEAR(clear_module_state->__pyx_n_s_main);
   Py_CLEAR(clear_module_state->__pyx_n_s_max_perturbations);
   Py_CLEAR(clear_module_state->__pyx_n_s_name);
@@ -3258,7 +3258,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_int32);
   Py_VISIT(traverse_module_state->__pyx_n_s_is_coroutine);
   Py_VISIT(traverse_module_state->__pyx_kp_u_isenabled);
-  Py_VISIT(traverse_module_state->__pyx_kp_s_leaf);
+  Py_VISIT(traverse_module_state->__pyx_n_s_leaf);
   Py_VISIT(traverse_module_state->__pyx_n_s_main);
   Py_VISIT(traverse_module_state->__pyx_n_s_max_perturbations);
   Py_VISIT(traverse_module_state->__pyx_n_s_name);
@@ -3408,7 +3408,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_int32 __pyx_mstate_global->__pyx_n_s_int32
 #define __pyx_n_s_is_coroutine __pyx_mstate_global->__pyx_n_s_is_coroutine
 #define __pyx_kp_u_isenabled __pyx_mstate_global->__pyx_kp_u_isenabled
-#define __pyx_kp_s_leaf __pyx_mstate_global->__pyx_kp_s_leaf
+#define __pyx_n_s_leaf __pyx_mstate_global->__pyx_n_s_leaf
 #define __pyx_n_s_main __pyx_mstate_global->__pyx_n_s_main
 #define __pyx_n_s_max_perturbations __pyx_mstate_global->__pyx_n_s_max_perturbations
 #define __pyx_n_s_name __pyx_mstate_global->__pyx_n_s_name
@@ -6831,17 +6831,16 @@ static PyObject *__pyx_f_20sklearn_oblique_tree_7oblique_8_oblique_4Tree_recurse
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  int __pyx_t_4;
-  long __pyx_t_5;
-  long __pyx_t_6;
-  long __pyx_t_7;
+  long __pyx_t_2;
+  long __pyx_t_3;
+  long __pyx_t_4;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  unsigned int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
-  unsigned int __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
+  int __pyx_t_10;
+  int __pyx_t_11;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -6853,417 +6852,468 @@ static PyObject *__pyx_f_20sklearn_oblique_tree_7oblique_8_oblique_4Tree_recurse
  *     cdef recurse(self, tree_node* node, np.ndarray A, list regions):
  *         print('recurse call')             # <<<<<<<<<<<<<<
  * 
- *         if node.left is NULL and node.right is NULL:    # leaf node
+ *         # left
  */
   __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "sklearn_oblique_tree/oblique/_oblique.pyx":115
- *         print('recurse call')
- * 
- *         if node.left is NULL and node.right is NULL:    # leaf node             # <<<<<<<<<<<<<<
- *             regions.append(A)
- *             print('leaf!')
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":117
+ *         # left
+ *         # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
+ *         x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention             # <<<<<<<<<<<<<<
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
  */
-  __pyx_t_3 = (__pyx_v_node->left == NULL);
-  if (__pyx_t_3) {
-  } else {
-    __pyx_t_2 = __pyx_t_3;
-    goto __pyx_L4_bool_binop_done;
-  }
-  __pyx_t_3 = (__pyx_v_node->right == NULL);
-  __pyx_t_2 = __pyx_t_3;
-  __pyx_L4_bool_binop_done:;
-  if (__pyx_t_2) {
-
-    /* "sklearn_oblique_tree/oblique/_oblique.pyx":116
- * 
- *         if node.left is NULL and node.right is NULL:    # leaf node
- *             regions.append(A)             # <<<<<<<<<<<<<<
- *             print('leaf!')
- *         else:
- */
-    if (unlikely(__pyx_v_regions == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 116, __pyx_L1_error)
+  { /* enter inner scope */
+    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_2 = (no_of_dimensions + 2);
+    __pyx_t_3 = __pyx_t_2;
+    for (__pyx_t_4 = 1; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+      __pyx_7genexpr__pyx_v_i = __pyx_t_4;
+      __pyx_t_5 = PyFloat_FromDouble((-(__pyx_v_node->coefficients[__pyx_7genexpr__pyx_v_i]))); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 117, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(0, 117, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
-    __pyx_t_4 = __Pyx_PyList_Append(__pyx_v_regions, ((PyObject *)__pyx_v_A)); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 116, __pyx_L1_error)
+  } /* exit inner scope */
+  __pyx_v_x = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
 
-    /* "sklearn_oblique_tree/oblique/_oblique.pyx":117
- *         if node.left is NULL and node.right is NULL:    # leaf node
- *             regions.append(A)
- *             print('leaf!')             # <<<<<<<<<<<<<<
- *         else:
- *             if node.left is not NULL:
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":118
+ *         # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
+ *         x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+ *         new_row = np.array(x)             # <<<<<<<<<<<<<<
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.left is not NULL:
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_array); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 118, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_5 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_6))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_6);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_6, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_5, __pyx_v_x};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  }
+  __pyx_v_new_row = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":119
+ *         x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))             # <<<<<<<<<<<<<<
+ *         if node.left is not NULL:
+ *             print('going left')
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_vstack); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_A), __pyx_n_s_copy); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_9 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (likely(PyMethod_Check(__pyx_t_8))) {
+    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
+    if (likely(__pyx_t_9)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+      __Pyx_INCREF(__pyx_t_9);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_8, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_9, NULL};
+    __pyx_t_6 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  }
+  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 119, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_GIVEREF(__pyx_t_6);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6)) __PYX_ERR(0, 119, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_v_new_row);
+  __Pyx_GIVEREF(__pyx_v_new_row);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_v_new_row)) __PYX_ERR(0, 119, __pyx_L1_error);
+  __pyx_t_6 = 0;
+  __pyx_t_6 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_5))) {
+    __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_5);
+    if (likely(__pyx_t_6)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_5, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_8};
+    __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  }
+  __pyx_v_A_ = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":120
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.left is not NULL:             # <<<<<<<<<<<<<<
+ *             print('going left')
+ *             regions = self.recurse(node.left, A_.copy(), regions)
+ */
+  __pyx_t_10 = (__pyx_v_node->left != NULL);
+  if (__pyx_t_10) {
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":121
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.left is not NULL:
+ *             print('going left')             # <<<<<<<<<<<<<<
+ *             regions = self.recurse(node.left, A_.copy(), regions)
+ *         else:
+ */
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "sklearn_oblique_tree/oblique/_oblique.pyx":115
- *         print('recurse call')
- * 
- *         if node.left is NULL and node.right is NULL:    # leaf node             # <<<<<<<<<<<<<<
- *             regions.append(A)
- *             print('leaf!')
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":122
+ *         if node.left is not NULL:
+ *             print('going left')
+ *             regions = self.recurse(node.left, A_.copy(), regions)             # <<<<<<<<<<<<<<
+ *         else:
+ *             print('leaf')
  */
-    goto __pyx_L3;
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_A_, __pyx_n_s_copy); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_8 = NULL;
+    __pyx_t_7 = 0;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_5))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_5);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_8);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_5, function);
+        __pyx_t_7 = 1;
+      }
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_8, NULL};
+      __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_5, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
+      __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    }
+    if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 122, __pyx_L1_error)
+    __pyx_t_5 = ((struct __pyx_vtabstruct_20sklearn_oblique_tree_7oblique_8_oblique_Tree *)__pyx_v_self->__pyx_vtab)->recurse(__pyx_v_self, __pyx_v_node->left, ((PyArrayObject *)__pyx_t_1), __pyx_v_regions); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 122, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (!(likely(PyList_CheckExact(__pyx_t_5))||((__pyx_t_5) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_t_5))) __PYX_ERR(0, 122, __pyx_L1_error)
+    __Pyx_DECREF_SET(__pyx_v_regions, ((PyObject*)__pyx_t_5));
+    __pyx_t_5 = 0;
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":120
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.left is not NULL:             # <<<<<<<<<<<<<<
+ *             print('going left')
+ *             regions = self.recurse(node.left, A_.copy(), regions)
+ */
+    goto __pyx_L5;
   }
 
-  /* "sklearn_oblique_tree/oblique/_oblique.pyx":119
- *             print('leaf!')
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":124
+ *             regions = self.recurse(node.left, A_.copy(), regions)
  *         else:
- *             if node.left is not NULL:             # <<<<<<<<<<<<<<
- *                 # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
- *                 x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+ *             print('leaf')             # <<<<<<<<<<<<<<
+ *             regions.append(A_)
+ * 
  */
   /*else*/ {
-    __pyx_t_2 = (__pyx_v_node->left != NULL);
-    if (__pyx_t_2) {
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":121
- *             if node.left is not NULL:
- *                 # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
- *                 x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention             # <<<<<<<<<<<<<<
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- */
-      { /* enter inner scope */
-        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_5 = (no_of_dimensions + 2);
-        __pyx_t_6 = __pyx_t_5;
-        for (__pyx_t_7 = 1; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-          __pyx_7genexpr__pyx_v_i = __pyx_t_7;
-          __pyx_t_8 = PyFloat_FromDouble((-(__pyx_v_node->coefficients[__pyx_7genexpr__pyx_v_i]))); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 121, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_8);
-          if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 121, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        }
-      } /* exit inner scope */
-      __pyx_v_x = ((PyObject*)__pyx_t_1);
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":122
- *                 # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
- *                 x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
- *                 new_row = np.array(x)             # <<<<<<<<<<<<<<
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going left')
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_array); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_9))) {
-        __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_9);
-        if (likely(__pyx_t_8)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-          __Pyx_INCREF(__pyx_t_8);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_9, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_v_x};
-        __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_9, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      }
-      __pyx_v_new_row = __pyx_t_1;
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":123
- *                 x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))             # <<<<<<<<<<<<<<
- *                 print('going left')
- *                 regions = self.recurse(node.left, A_, regions)
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_vstack); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_A), __pyx_n_s_copy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_12 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (likely(PyMethod_Check(__pyx_t_11))) {
-        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_11);
-        if (likely(__pyx_t_12)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-          __Pyx_INCREF(__pyx_t_12);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_11, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_12, NULL};
-        __pyx_t_9 = __Pyx_PyObject_FastCall(__pyx_t_11, __pyx_callargs+1-__pyx_t_10, 0+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 123, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      }
-      __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      __Pyx_GIVEREF(__pyx_t_9);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_9)) __PYX_ERR(0, 123, __pyx_L1_error);
-      __Pyx_INCREF(__pyx_v_new_row);
-      __Pyx_GIVEREF(__pyx_v_new_row);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_v_new_row)) __PYX_ERR(0, 123, __pyx_L1_error);
-      __pyx_t_9 = 0;
-      __pyx_t_9 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_8))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
-        if (likely(__pyx_t_9)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-          __Pyx_INCREF(__pyx_t_9);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_8, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_9, __pyx_t_11};
-        __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      }
-      __pyx_v_A_ = __pyx_t_1;
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":124
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going left')             # <<<<<<<<<<<<<<
- *                 regions = self.recurse(node.left, A_, regions)
- * 
- */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":125
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going left')
- *                 regions = self.recurse(node.left, A_, regions)             # <<<<<<<<<<<<<<
- * 
- *             if node.right is not NULL:
- */
-      if (!(likely(((__pyx_v_A_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_A_, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 125, __pyx_L1_error)
-      __pyx_t_1 = ((struct __pyx_vtabstruct_20sklearn_oblique_tree_7oblique_8_oblique_Tree *)__pyx_v_self->__pyx_vtab)->recurse(__pyx_v_self, __pyx_v_node->left, ((PyArrayObject *)__pyx_v_A_), __pyx_v_regions); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_t_1))) __PYX_ERR(0, 125, __pyx_L1_error)
-      __Pyx_DECREF_SET(__pyx_v_regions, ((PyObject*)__pyx_t_1));
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":119
- *             print('leaf!')
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":125
  *         else:
- *             if node.left is not NULL:             # <<<<<<<<<<<<<<
- *                 # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
- *                 x = [-node.coefficients[i] for i in range(1, no_of_dimensions+2)] # negative sign because we use < 0 as convention
+ *             print('leaf')
+ *             regions.append(A_)             # <<<<<<<<<<<<<<
+ * 
+ *         # right
  */
+    if (unlikely(__pyx_v_regions == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
+      __PYX_ERR(0, 125, __pyx_L1_error)
     }
+    __pyx_t_11 = __Pyx_PyList_Append(__pyx_v_regions, __pyx_v_A_); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 125, __pyx_L1_error)
+  }
+  __pyx_L5:;
 
-    /* "sklearn_oblique_tree/oblique/_oblique.pyx":127
- *                 regions = self.recurse(node.left, A_, regions)
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":128
  * 
- *             if node.right is not NULL:             # <<<<<<<<<<<<<<
- *                 x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
- *                 new_row = np.array(x)
+ *         # right
+ *         x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]             # <<<<<<<<<<<<<<
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
  */
-    __pyx_t_2 = (__pyx_v_node->right != NULL);
-    if (__pyx_t_2) {
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":128
- * 
- *             if node.right is not NULL:
- *                 x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]             # <<<<<<<<<<<<<<
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- */
-      { /* enter inner scope */
-        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_5 = (no_of_dimensions + 2);
-        __pyx_t_6 = __pyx_t_5;
-        for (__pyx_t_7 = 1; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-          __pyx_8genexpr1__pyx_v_i = __pyx_t_7;
-          __pyx_t_8 = PyFloat_FromDouble((__pyx_v_node->coefficients[__pyx_8genexpr1__pyx_v_i])); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 128, __pyx_L1_error)
-          __Pyx_GOTREF(__pyx_t_8);
-          if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_8))) __PYX_ERR(0, 128, __pyx_L1_error)
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        }
-      } /* exit inner scope */
-      __Pyx_XDECREF_SET(__pyx_v_x, ((PyObject*)__pyx_t_1));
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":129
- *             if node.right is not NULL:
- *                 x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
- *                 new_row = np.array(x)             # <<<<<<<<<<<<<<
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going right')
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 129, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_array); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 129, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_11))) {
-        __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_11);
-        if (likely(__pyx_t_8)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-          __Pyx_INCREF(__pyx_t_8);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_11, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_v_x};
-        __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_11, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      }
-      __Pyx_XDECREF_SET(__pyx_v_new_row, __pyx_t_1);
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":130
- *                 x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))             # <<<<<<<<<<<<<<
- *                 print('going right')
- *                 regions = self.recurse(node.right, A_, regions)
- */
-      __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 130, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_vstack); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 130, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_8);
-      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_A), __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 130, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_12 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (likely(PyMethod_Check(__pyx_t_9))) {
-        __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_9);
-        if (likely(__pyx_t_12)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-          __Pyx_INCREF(__pyx_t_12);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_9, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_12, NULL};
-        __pyx_t_11 = __Pyx_PyObject_FastCall(__pyx_t_9, __pyx_callargs+1-__pyx_t_10, 0+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 130, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_11);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      }
-      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 130, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_9);
-      __Pyx_GIVEREF(__pyx_t_11);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_11)) __PYX_ERR(0, 130, __pyx_L1_error);
-      __Pyx_INCREF(__pyx_v_new_row);
-      __Pyx_GIVEREF(__pyx_v_new_row);
-      if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_v_new_row)) __PYX_ERR(0, 130, __pyx_L1_error);
-      __pyx_t_11 = 0;
-      __pyx_t_11 = NULL;
-      __pyx_t_10 = 0;
-      #if CYTHON_UNPACK_METHODS
-      if (unlikely(PyMethod_Check(__pyx_t_8))) {
-        __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_8);
-        if (likely(__pyx_t_11)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
-          __Pyx_INCREF(__pyx_t_11);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_8, function);
-          __pyx_t_10 = 1;
-        }
-      }
-      #endif
-      {
-        PyObject *__pyx_callargs[2] = {__pyx_t_11, __pyx_t_9};
-        __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_10, 1+__pyx_t_10);
-        __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      }
-      __Pyx_XDECREF_SET(__pyx_v_A_, __pyx_t_1);
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":131
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going right')             # <<<<<<<<<<<<<<
- *                 regions = self.recurse(node.right, A_, regions)
- * 
- */
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L1_error)
+  { /* enter inner scope */
+    __pyx_t_5 = PyList_New(0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 128, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __pyx_t_2 = (no_of_dimensions + 2);
+    __pyx_t_3 = __pyx_t_2;
+    for (__pyx_t_4 = 1; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+      __pyx_8genexpr1__pyx_v_i = __pyx_t_4;
+      __pyx_t_1 = PyFloat_FromDouble((__pyx_v_node->coefficients[__pyx_8genexpr1__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_5, (PyObject*)__pyx_t_1))) __PYX_ERR(0, 128, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    }
+  } /* exit inner scope */
+  __Pyx_DECREF_SET(__pyx_v_x, ((PyObject*)__pyx_t_5));
+  __pyx_t_5 = 0;
 
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":132
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going right')
- *                 regions = self.recurse(node.right, A_, regions)             # <<<<<<<<<<<<<<
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":129
+ *         # right
+ *         x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
+ *         new_row = np.array(x)             # <<<<<<<<<<<<<<
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.right is not NULL:
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_array); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 129, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_8))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_8);
+    if (likely(__pyx_t_1)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+      __Pyx_INCREF(__pyx_t_1);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_8, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_v_x};
+    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_8, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 129, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  }
+  __Pyx_DECREF_SET(__pyx_v_new_row, __pyx_t_5);
+  __pyx_t_5 = 0;
+
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":130
+ *         x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))             # <<<<<<<<<<<<<<
+ *         if node.right is not NULL:
+ *             print('going right')
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_vstack); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_A), __pyx_n_s_copy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_9 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (likely(PyMethod_Check(__pyx_t_6))) {
+    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_6);
+    if (likely(__pyx_t_9)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+      __Pyx_INCREF(__pyx_t_9);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_6, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_9, NULL};
+    __pyx_t_8 = __Pyx_PyObject_FastCall(__pyx_t_6, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  }
+  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_GIVEREF(__pyx_t_8);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_8)) __PYX_ERR(0, 130, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_v_new_row);
+  __Pyx_GIVEREF(__pyx_v_new_row);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_v_new_row)) __PYX_ERR(0, 130, __pyx_L1_error);
+  __pyx_t_8 = 0;
+  __pyx_t_8 = NULL;
+  __pyx_t_7 = 0;
+  #if CYTHON_UNPACK_METHODS
+  if (unlikely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_8)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_8);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+      __pyx_t_7 = 1;
+    }
+  }
+  #endif
+  {
+    PyObject *__pyx_callargs[2] = {__pyx_t_8, __pyx_t_6};
+    __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_7, 1+__pyx_t_7);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  }
+  __Pyx_DECREF_SET(__pyx_v_A_, __pyx_t_5);
+  __pyx_t_5 = 0;
+
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":131
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.right is not NULL:             # <<<<<<<<<<<<<<
+ *             print('going right')
+ *             regions = self.recurse(node.right, A_.copy(), regions)
+ */
+  __pyx_t_10 = (__pyx_v_node->right != NULL);
+  if (__pyx_t_10) {
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":132
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.right is not NULL:
+ *             print('going right')             # <<<<<<<<<<<<<<
+ *             regions = self.recurse(node.right, A_.copy(), regions)
+ *         else:
+ */
+    __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_5);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":133
+ *         if node.right is not NULL:
+ *             print('going right')
+ *             regions = self.recurse(node.right, A_.copy(), regions)             # <<<<<<<<<<<<<<
+ *         else:
+ *             print('leaf')
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_A_, __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_6 = NULL;
+    __pyx_t_7 = 0;
+    #if CYTHON_UNPACK_METHODS
+    if (likely(PyMethod_Check(__pyx_t_1))) {
+      __pyx_t_6 = PyMethod_GET_SELF(__pyx_t_1);
+      if (likely(__pyx_t_6)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_1, function);
+        __pyx_t_7 = 1;
+      }
+    }
+    #endif
+    {
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, NULL};
+      __pyx_t_5 = __Pyx_PyObject_FastCall(__pyx_t_1, __pyx_callargs+1-__pyx_t_7, 0+__pyx_t_7);
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_5);
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    }
+    if (!(likely(((__pyx_t_5) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_5, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 133, __pyx_L1_error)
+    __pyx_t_1 = ((struct __pyx_vtabstruct_20sklearn_oblique_tree_7oblique_8_oblique_Tree *)__pyx_v_self->__pyx_vtab)->recurse(__pyx_v_self, __pyx_v_node->right, ((PyArrayObject *)__pyx_t_5), __pyx_v_regions); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_t_1))) __PYX_ERR(0, 133, __pyx_L1_error)
+    __Pyx_DECREF_SET(__pyx_v_regions, ((PyObject*)__pyx_t_1));
+    __pyx_t_1 = 0;
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":131
+ *         new_row = np.array(x)
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.right is not NULL:             # <<<<<<<<<<<<<<
+ *             print('going right')
+ *             regions = self.recurse(node.right, A_.copy(), regions)
+ */
+    goto __pyx_L8;
+  }
+
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":135
+ *             regions = self.recurse(node.right, A_.copy(), regions)
+ *         else:
+ *             print('leaf')             # <<<<<<<<<<<<<<
+ *             regions.append(A_)
+ * 
+ */
+  /*else*/ {
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "sklearn_oblique_tree/oblique/_oblique.pyx":136
+ *         else:
+ *             print('leaf')
+ *             regions.append(A_)             # <<<<<<<<<<<<<<
  * 
  *         return regions
  */
-      if (!(likely(((__pyx_v_A_) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_A_, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 132, __pyx_L1_error)
-      __pyx_t_1 = ((struct __pyx_vtabstruct_20sklearn_oblique_tree_7oblique_8_oblique_Tree *)__pyx_v_self->__pyx_vtab)->recurse(__pyx_v_self, __pyx_v_node->right, ((PyArrayObject *)__pyx_v_A_), __pyx_v_regions); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
-      if (!(likely(PyList_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("list", __pyx_t_1))) __PYX_ERR(0, 132, __pyx_L1_error)
-      __Pyx_DECREF_SET(__pyx_v_regions, ((PyObject*)__pyx_t_1));
-      __pyx_t_1 = 0;
-
-      /* "sklearn_oblique_tree/oblique/_oblique.pyx":127
- *                 regions = self.recurse(node.left, A_, regions)
- * 
- *             if node.right is not NULL:             # <<<<<<<<<<<<<<
- *                 x = [node.coefficients[i] for i in range(1, no_of_dimensions+2)]
- *                 new_row = np.array(x)
- */
+    if (unlikely(__pyx_v_regions == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
+      __PYX_ERR(0, 136, __pyx_L1_error)
     }
+    __pyx_t_11 = __Pyx_PyList_Append(__pyx_v_regions, __pyx_v_A_); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 136, __pyx_L1_error)
   }
-  __pyx_L3:;
+  __pyx_L8:;
 
-  /* "sklearn_oblique_tree/oblique/_oblique.pyx":134
- *                 regions = self.recurse(node.right, A_, regions)
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":138
+ *             regions.append(A_)
  * 
  *         return regions             # <<<<<<<<<<<<<<
  * 
@@ -7285,10 +7335,10 @@ static PyObject *__pyx_f_20sklearn_oblique_tree_7oblique_8_oblique_4Tree_recurse
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
   __Pyx_AddTraceback("sklearn_oblique_tree.oblique._oblique.Tree.recurse", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
@@ -7722,7 +7772,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
     {&__pyx_n_s_is_coroutine, __pyx_k_is_coroutine, sizeof(__pyx_k_is_coroutine), 0, 0, 1, 1},
     {&__pyx_kp_u_isenabled, __pyx_k_isenabled, sizeof(__pyx_k_isenabled), 0, 1, 0, 0},
-    {&__pyx_kp_s_leaf, __pyx_k_leaf, sizeof(__pyx_k_leaf), 0, 0, 1, 0},
+    {&__pyx_n_s_leaf, __pyx_k_leaf, sizeof(__pyx_k_leaf), 0, 0, 1, 1},
     {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
     {&__pyx_n_s_max_perturbations, __pyx_k_max_perturbations, sizeof(__pyx_k_max_perturbations), 0, 0, 1, 1},
     {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
@@ -7802,42 +7852,42 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *     cdef recurse(self, tree_node* node, np.ndarray A, list regions):
  *         print('recurse call')             # <<<<<<<<<<<<<<
  * 
- *         if node.left is NULL and node.right is NULL:    # leaf node
+ *         # left
  */
   __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_recurse_call); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 113, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "sklearn_oblique_tree/oblique/_oblique.pyx":117
- *         if node.left is NULL and node.right is NULL:    # leaf node
- *             regions.append(A)
- *             print('leaf!')             # <<<<<<<<<<<<<<
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":121
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.left is not NULL:
+ *             print('going left')             # <<<<<<<<<<<<<<
+ *             regions = self.recurse(node.left, A_.copy(), regions)
  *         else:
- *             if node.left is not NULL:
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_leaf); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_going_left); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
   /* "sklearn_oblique_tree/oblique/_oblique.pyx":124
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going left')             # <<<<<<<<<<<<<<
- *                 regions = self.recurse(node.left, A_, regions)
+ *             regions = self.recurse(node.left, A_.copy(), regions)
+ *         else:
+ *             print('leaf')             # <<<<<<<<<<<<<<
+ *             regions.append(A_)
  * 
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_going_left); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_leaf); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "sklearn_oblique_tree/oblique/_oblique.pyx":131
- *                 new_row = np.array(x)
- *                 A_ = np.vstack((A.copy(), new_row))
- *                 print('going right')             # <<<<<<<<<<<<<<
- *                 regions = self.recurse(node.right, A_, regions)
- * 
+  /* "sklearn_oblique_tree/oblique/_oblique.pyx":132
+ *         A_ = np.vstack((A.copy(), new_row))
+ *         if node.right is not NULL:
+ *             print('going right')             # <<<<<<<<<<<<<<
+ *             regions = self.recurse(node.right, A_.copy(), regions)
+ *         else:
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_going_right); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 131, __pyx_L1_error)
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_going_right); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
