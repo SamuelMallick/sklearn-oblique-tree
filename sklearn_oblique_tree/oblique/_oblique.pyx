@@ -110,7 +110,7 @@ cdef class Tree:
         return self.recurse(sklearn_root_node, A.copy(), regions)
 
     cdef recurse(self, tree_node* node, np.ndarray A, list regions):
-        print('recurse call')
+        # print('recurse call')
 
         # left
         # indexing starts from 1 (for some reason), and there is extra constant term (so +2)
@@ -118,10 +118,10 @@ cdef class Tree:
         new_row = np.array(x)
         A_ = np.vstack((A.copy(), new_row))
         if node.left is not NULL:            
-            print('going left')
+            # print('going left')
             regions = self.recurse(node.left, A_.copy(), regions)
         else:
-            print('leaf')
+            # print('leaf')
             regions.append(A_)
 
         # right
@@ -129,10 +129,10 @@ cdef class Tree:
         new_row = np.array(x)
         A_ = np.vstack((A.copy(), new_row))
         if node.right is not NULL:
-            print('going right')
+            # print('going right')
             regions = self.recurse(node.right, A_.copy(), regions)
         else:
-            print('leaf')
+            # print('leaf')
             regions.append(A_)
     
         return regions
